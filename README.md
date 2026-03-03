@@ -78,7 +78,7 @@ Contiene dos exportaciones:
 - **`ValidateJoi(schema)`** — Middleware de orden superior que recibe un esquema Joi, valida el `req.body` y, si falla, devuelve `422 Unprocessable Entity`.
 - **`Schemas`** — Objeto con los esquemas de validación de cada entidad:
   - `Schemas.organizacion.create` / `.update` → valida `{ name: string }`.
-  - `Schemas.usuario.create` / `.update` → valida `{ name: string, organizacion: ObjectId (24 hex) }`.
+  - `Schemas.usuario.create` / `.update` → valida `{ name: string, email: string, password: string (min 6), organizacion: ObjectId (24 hex) }`.
 
 ---
 
@@ -101,6 +101,8 @@ Define el modelo Mongoose `Usuario` con la siguiente estructura:
 |---|---|---|---|
 | `_id` | ObjectId | Sí (auto) | |
 | `name` | String | Sí | |
+| `email` | String | Sí | Único |
+| `password` | String | Sí | |
 | `organizacion` | ObjectId | Sí | Referencia a `Organizacion` |
 | `createdAt` | Date | Auto | Generado por `timestamps: true` |
 | `updatedAt` | Date | Auto | Generado por `timestamps: true` |
@@ -110,22 +112,12 @@ Interfaces TypeScript exportadas: `IUsuario`, `IUsuarioModel`.
 ---
 
 ### `src/controllers/Organizacion.ts`
-Implementa las cinco operaciones CRUD sobre la colección `organizaciones`:
-- `createOrganizacion` — Crea y guarda una nueva organización.
-- `readOrganizacion` — Busca por `_id`.
-- `readAll` — Devuelve todas las organizaciones.
-- `updateOrganizacion` — Actualiza campos mediante `findById` + `.set()` + `.save()`.
-- `deleteOrganizacion` — Elimina mediante `findByIdAndDelete`.
+Implementa las operaciones CRUD sobre la colección `organizaciones`. 
 
 ---
 
 ### `src/controllers/Usuario.ts`
-Implementa las cinco operaciones CRUD sobre la colección `usuarios`:
-- `createUsuario` — Crea y guarda un nuevo usuario.
-- `readUsuario` — Busca por `_id` y hace **populate** de la organización referenciada.
-- `readAll` — Devuelve todos los usuarios.
-- `updateUsuario` — Actualiza campos mediante `findById` + `.set()` + `.save()`.
-- `deleteUsuario` — Elimina mediante `findByIdAndDelete`.
+Implementa las operaciones CRUD sobre la colección `usuarios`. 
 
 ---
 
@@ -145,20 +137,11 @@ SERVER_PORT="1337"
 
 La variable crítica es `MONGO_URI`. La base de datos usada por defecto es **`sem1`**.
 
-### Colecciones generadas automáticamente por Mongoose
-
-| Colección | Modelo | Descripción |
-|---|---|---|
-| `organizacions` | `Organizacion` | Almacena las organizaciones |
-| `usuarios` | `Usuario` | Almacena los usuarios con referencia a una organización |
-
-> Mongoose pluraliza el nombre del modelo en minúsculas para nombrar la colección (`Organizacion` → `organizacions`).
-
 ---
 
 ## Endpoints de la API
 
-El servidor corre en `http://localhost:1337` por defecto.
+El servidor corre en `http://localhost:1337` por defecto. La documentación interactiva está disponible en `/api`.
 
 ### General
 
@@ -172,30 +155,11 @@ El servidor corre en `http://localhost:1337` por defecto.
 
 | Método | URL | Body (JSON) | Validación | Descripción | Respuesta éxito |
 |---|---|---|---|---|---|
-| `POST` | `/organizaciones/create` | `{ "name": "string" }` | Joi required | Crea una nueva organización | `201` |
-| `GET` | `/organizaciones/get` | — | — | Lista todas las organizaciones | `200` |
-| `GET` | `/organizaciones/get/:organizacionId` | — | — | Obtiene una organización por ID | `200` |
-| `PATCH` | `/organizaciones/update/:organizacionId` | `{ "name": "string" }` | Joi required | Actualiza el nombre de una organización | `201` |
-| `DELETE` | `/organizaciones/delete/:organizacionId` | — | — | Elimina una organización por ID | `201` |
-
-#### Ejemplo — Crear organización
-```http
-POST /organizaciones/create
-Content-Type: application/json
-
-{
-  "name": "Acme Corp"
-}
-```
-Respuesta:
-```json
-{
-  "organizacion": {
-    "_id": "64a1b2c3d4e5f6a7b8c9d0e1",
-    "name": "Acme Corp"
-  }
-}
-```
+| `POST` | `/` | `{ "name": "string" }` | Joi required | Crea una nueva organización | `201` |
+| `GET` | `/` | — | — | Lista todas las organizaciones | `200` |
+| `GET` | `/:organizacionId` | — | — | Obtiene una organización por ID | `200` |
+| `PUT` | `/:organizacionId` | `{ "name": "string" }` | Joi required | Actualiza el nombre de una organización | `201` |
+| `DELETE` | `/:organizacionId` | — | — | Elimina una organización por ID | `201` |
 
 ---
 
@@ -203,80 +167,29 @@ Respuesta:
 
 | Método | URL | Body (JSON) | Validación | Descripción | Respuesta éxito |
 |---|---|---|---|---|---|
-| `POST` | `/usuarios/create` | `{ "name": "string", "organizacion": "ObjectId" }` | Joi required | Crea un nuevo usuario | `201` |
-| `GET` | `/usuarios/get` | — | — | Lista todos los usuarios | `200` |
-| `GET` | `/usuarios/get/:usuarioId` | — | — | Obtiene un usuario por ID (con populate de organización) | `200` |
-| `PATCH` | `/usuarios/update/:usuarioId` | `{ "name": "string", "organizacion": "ObjectId" }` | Joi required | Actualiza los datos de un usuario | `201` |
-| `DELETE` | `/usuarios/delete/:usuarioId` | — | — | Elimina un usuario por ID | `201` |
-
-#### Ejemplo — Crear usuario
-```http
-POST /usuarios/create
-Content-Type: application/json
-
-{
-  "name": "Joan Puig",
-  "organizacion": "64a1b2c3d4e5f6a7b8c9d0e1"
-}
-```
-Respuesta:
-```json
-{
-  "usuario": {
-    "_id": "64b2c3d4e5f6a7b8c9d0e1f2",
-    "name": "Joan Puig",
-    "organizacion": "64a1b2c3d4e5f6a7b8c9d0e1",
-    "createdAt": "2026-02-27T10:00:00.000Z",
-    "updatedAt": "2026-02-27T10:00:00.000Z"
-  }
-}
-```
-
-#### Ejemplo — Obtener usuario con populate
-```http
-GET /usuarios/get/64b2c3d4e5f6a7b8c9d0e1f2
-```
-Respuesta:
-```json
-{
-  "usuario": {
-    "_id": "64b2c3d4e5f6a7b8c9d0e1f2",
-    "name": "Joan Puig",
-    "organizacion": {
-      "_id": "64a1b2c3d4e5f6a7b8c9d0e1",
-      "name": "Acme Corp"
-    },
-    "createdAt": "2026-02-27T10:00:00.000Z",
-    "updatedAt": "2026-02-27T10:00:00.000Z"
-  }
-}
-```
+| `POST` | `/` | `{ "name": string, "email": string, "password": password, "organizacion": "ObjectId" }` | Joi required | Crea un nuevo usuario | `201` |
+| `GET` | `/` | — | — | Lista todos los usuarios | `200` |
+| `GET` | `/:usuarioId` | — | — | Obtiene un usuario por ID (con populate de organización) | `200` |
+| `PUT` | `/:usuarioId` | `{ "name": string, ... }` | Joi required | Actualiza los datos de un usuario | `201` |
+| `DELETE` | `/:usuarioId` | — | — | Elimina un usuario por ID | `201` |
 
 ---
 
-## Códigos de respuesta
+## 🎓 Ejercicio de Seminario
 
-| Código | Significado |
-|---|---|
-| `200` | OK — lectura exitosa |
-| `201` | Created / Modified — escritura exitosa |
-| `404` | Not Found — recurso no encontrado |
-| `422` | Unprocessable Entity — validación Joi fallida |
-| `500` | Internal Server Error — error de base de datos |
+En la carpeta `ejercicio-seminario/` encontrarás material didáctico sobre cómo implementar relaciones entre modelos en Mongoose (Manual vs Virtuals). 
 
 ---
 
 ## Instalación y ejecución
 
 ```bash
-# Instalar dependencias (compila TypeScript automáticamente via postinstall)
+# Instalar dependencias 
 npm install
 
-# Iniciar el servidor (ejecuta el build compilado)
+# Iniciar el servidor
 npm start
 ```
-
-> El script `postinstall` ejecuta `tsc` automáticamente, compilando `src/` hacia `build/`.
 
 Para compilar manualmente:
 ```bash
