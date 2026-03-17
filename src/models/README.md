@@ -13,14 +13,10 @@ class User{
 + _id : string
 + firstName : string
 + lastName : string
-+ credentialsId : UserCredentials
++ password : string
 }
 
-class UserCredentials{
-+ _id : string
-+ passwordHash : string
-+ userId : string
-}
+
 
 class Book{
 + _id : string
@@ -36,7 +32,6 @@ class Author{
 
 Post --> User
 Post --> Book
-User --> UserCredentials
 Book --> Author
 
 ```
