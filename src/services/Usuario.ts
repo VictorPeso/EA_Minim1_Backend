@@ -28,13 +28,13 @@ const updateUsuario = async (usuarioId: string, data: Partial<IUsuario>): Promis
 
 const deleteUsuario = async (usuarioId: string): Promise<IUsuarioModel | null> => {
     return await Usuario.findByIdAndUpdate(usuarioId, 
-        { IsActive: false }, // Soft delete by setting IsActive to false
+        { IsDeleted: true }, // Soft delete by setting IsDeleted to true
         { new: true }); // Return the updated document
 };
 
 const restoreUsuario = async (usuarioId: string): Promise<IUsuarioModel | null> => {
     return await Usuario.findByIdAndUpdate(usuarioId,
-        { IsActive: true }, // Restore by setting IsActive to true
+        { IsDeleted: false }, // Restore by setting IsDeleted to false
         { new: true }); // Return the updated document
 }
 

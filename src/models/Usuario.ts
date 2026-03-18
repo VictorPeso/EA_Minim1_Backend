@@ -4,7 +4,7 @@ export interface IUsuario {
     name: string;
     email: string;
     password: string;
-    IsActive?: boolean;
+    IsDeleted?: boolean;
 }
 
 export interface IUsuarioModel extends IUsuario, Document { }
@@ -14,7 +14,7 @@ const UsuarioSchema: Schema = new Schema(
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        IsActive: { type: Boolean, default: true }
+        IsDeleted: { type: Boolean, default: false } 
     },
     {
         timestamps: true,

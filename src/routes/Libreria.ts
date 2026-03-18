@@ -142,4 +142,27 @@ router.put('/:libreriaId', ValidateJoi(Schemas.libreria.update), controller.upda
  */
 router.delete('/:libreriaId', controller.deleteLibreria);
 
+/**
+ * @openapi
+ * /librerias/{libreriaId}/restaurar:
+ *   post:
+ *     summary: Restaura una librería eliminada por ID  
+ *     tags: [Librerias]
+ *     parameters:
+ *       - in: path
+ *         name: libreriaId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ObjectId de la librería
+ *     responses:
+ *       201:
+ *         description: OK
+ *       404:
+ *         description: No encontrado
+ *       422:
+ *         description: Validación fallida
+ * */
+router.post('/:libreriaId/restaurar', controller.restoreLibreria);
+
 export default router;

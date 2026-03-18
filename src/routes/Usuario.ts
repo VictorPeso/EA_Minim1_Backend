@@ -154,7 +154,7 @@ router.delete('/:usuarioId', controller.deleteUsuario);
  * /usuarios/{usuarioId}/restaurar:
  *    put:
  *     summary: Recuperar un usuario desactivado
- *     description: Cambia el estado IsActive a true para que el usuario vuelva a estar operativo.
+ *     description: Cambia el estado IsDeleted a false para que el usuario vuelva a estar operativo.
  *     tags: [Usuarios]
  *     parameters:
  *       - in: path

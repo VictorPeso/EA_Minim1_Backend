@@ -8,6 +8,7 @@ export interface ILibro {
     type: 'VENTA' | 'ALQUILER';
     owner: mongoose.Types.ObjectId | string;
     libreria?: mongoose.Types.ObjectId | string;
+    IsDeleted?: boolean; // Campo para soft delete
 }
 
 export interface ILibroModel extends ILibro, Document { }
@@ -20,7 +21,8 @@ const LibroSchema: Schema = new Schema(
         price: { type: Number, required: true },
         type: { type: String, enum: ['VENTA', 'ALQUILER'], required: true },
         owner: { type: Schema.Types.ObjectId, required: true, ref: 'Usuario' },
-        libreria: { type: Schema.Types.ObjectId, required: false, ref: 'Libreria' }
+        libreria: { type: Schema.Types.ObjectId, required: false, ref: 'Libreria' },
+        IsDeleted: { type: Boolean, default: false } // Campo para soft delete
     },
     {
         timestamps: true,

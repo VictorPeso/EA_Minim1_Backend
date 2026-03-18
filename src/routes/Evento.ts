@@ -153,4 +153,25 @@ router.put('/:eventoId', ValidateJoi(Schemas.evento.update), controller.updateEv
  */
 router.delete('/:eventoId', controller.deleteEvento);
 
+/**
+ * @openapi
+ * /eventos/{eventoId}/restore:
+ *   post:
+ *     summary: Restaura un evento eliminado por ID (soft delete)
+ *     tags: [Eventos]
+ *     parameters:      
+ *       - in: path  
+ *         name: eventoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Restaurado
+ *       404:
+ *         description: No encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+router.post('/:eventoId/restore', controller.restoreEvento);
 export default router;

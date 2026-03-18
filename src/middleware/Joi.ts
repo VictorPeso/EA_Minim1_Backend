@@ -32,8 +32,7 @@ export const Schemas = {
         update: Joi.object<IUsuario>({
             name: Joi.string().required(),
             email: Joi.string().email().required(),
-            password: Joi.string().min(6).required(),
-            IsActive: Joi.boolean().optional()
+            password: Joi.string().min(6).required(), 
         })
     },
     libreria: {
@@ -43,7 +42,7 @@ export const Schemas = {
         }),
         update: Joi.object<ILibreria>({
             name: Joi.string().required(),
-            address: Joi.string().required()
+            address: Joi.string().required(), 
         })
     },
     libro: {

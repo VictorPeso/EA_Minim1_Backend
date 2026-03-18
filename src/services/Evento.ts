@@ -1,0 +1,45 @@
+import mongoose from "mongoose";
+import Evento, { IEventoModel, IEvento } from "../models/Evento";
+
+const createEvento = async (data: Partial<IEvento>): Promise<IEventoModel> => {
+    const evento = new Evento({
+        _id: new mongoose.Types.ObjectId(),
+        ...data
+    });
+    return await evento.save();
+};
+
+const getEvento = async (eventoId: string): Promise<IEventoModel | null> => {
+    return await Evento
+        .findById(eventoId)
+        .populate('libreria'); // Populate the libreria field
+};
+
+const getAllEventos = async (): Promise<IEventoModel[]> => {
+    return await Evento
+        .find()
+        .populate('libreria'); // Populate the libreria field
+};
+
+const updateEvento = async (eventoId: string, data: Partial<IEvento>): Promise<IEventoModel | null> => {
+    const evento = await Evento.findById(eventoId);
+    if (evento) {
+        evento.set(data);
+        return await evento.save();
+    }       
+    return null;
+};
+
+const deleteEvento = async (eventoId: string): Promise<IEventoModel | null> => {
+    return await Evento.findByIdAndUpdate(eventoId, 
+        { IsDeleted: true }, // Soft delete by setting IsDeleted to true
+        { new: true }); // Return the updated document
+};
+
+const restoreEvento = async (eventoId: string): Promise<IEventoModel | null> => {
+    return await Evento.findByIdAndUpdate(eventoId, 
+        { IsDeleted: false }, // Restore by setting IsDeleted to false
+        { new: true }); // Return the updated document
+};
+
+export default { createEvento, getEvento, getAllEventos, updateEvento, deleteEvento, restoreEvento };

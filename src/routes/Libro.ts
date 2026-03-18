@@ -165,12 +165,35 @@ router.put('/:libroId', ValidateJoi(Schemas.libro.update), controller.updateLibr
  *         required: true
  *         schema:
  *           type: string
+ *         description: ObjectId del libro
  *     responses:
- *       201:
- *         description: Eliminado
+ *       200:
+ *         description: OK
  *       404:
  *         description: No encontrado
  */
 router.delete('/:libroId', controller.deleteLibro);
 
+/**
+ * @openapi
+ * /libros/{libroId}/restore:
+ *   put:
+ *     summary: Restaura un libro eliminado por ID
+ *     tags: [Libros]
+ *     parameters:
+ *       - in: path
+ *         name: libroId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     description: ObjectId del libro
+ *     responses:
+ *       200:
+ *         description: Restaurado
+ *       404:
+ *         description: No encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+router.put('/:libroId/restore', controller.restoreLibro);
 export default router;
