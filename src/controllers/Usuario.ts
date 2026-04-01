@@ -53,7 +53,17 @@ const deleteUsuario = async (req: Request, res: Response, next: NextFunction) =>
     const usuarioId = req.params.usuarioId;
     try {
         const usuario = await UsuarioService.deleteUsuario(usuarioId);
-        return usuario ? res.status(201).json(usuario) : res.status(404).json({ message: 'not found' });
+        return usuario ? res.status(200).json(usuario) : res.status(404).json({ message: 'not found' });
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+};
+
+const permanentDeleteUsuario = async (req: Request, res: Response, next: NextFunction) => {
+    const usuarioId = req.params.usuarioId;
+    try {
+        const usuario = await UsuarioService.permanentDeleteUsuario(usuarioId);
+        return usuario ? res.status(204).json({ message: 'deleted permanent' }) : res.status(404).json({ message: 'not found' });
     } catch (error) {
         return res.status(500).json({ error });
     }
@@ -69,4 +79,4 @@ const restoreUsuario = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
-export default { createUsuario, getUsuario, getAllUsuarios, getAllUsuarios_NOT_Deleted, updateUsuario, deleteUsuario, restoreUsuario };
+export default { createUsuario, getUsuario, getAllUsuarios, getAllUsuarios_NOT_Deleted, updateUsuario, deleteUsuario, permanentDeleteUsuario, restoreUsuario };
