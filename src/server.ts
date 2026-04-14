@@ -5,6 +5,8 @@ import cors from 'cors';
 import { config } from './config/config';
 import Logging from './library/Logging';
 import usuarioRoutes from './routes/Usuario';
+import faqRoutes from './routes/Faq';
+import respostaRoutes from './routes/Resposta';
 import libreriaRoutes from './routes/Libreria';
 import libroRoutes from './routes/Libro';
 import autorRoutes from './routes/Autor';
@@ -49,6 +51,8 @@ const StartServer = () => {
 
     /** Routes */
     router.use('/usuarios', usuarioRoutes);
+    router.use('/faqs', faqRoutes);
+    router.use('/respostas', respostaRoutes);
     router.use('/librerias', libreriaRoutes);
     router.use('/libros', libroRoutes);
     router.use('/autores', autorRoutes);
