@@ -1,6 +1,8 @@
 import Joi, { ObjectSchema } from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import { IUsuario } from '../models/Usuario';
+import { IFaq } from '../models/Faq';
+import { IResposta } from '../models/Resposta';
 import { ILibreria } from '../models/Libreria';
 import { ILibro } from '../models/Libro';
 import { IEvento } from '../models/Evento';
@@ -114,6 +116,32 @@ export const Schemas = {
                 .regex(/^[0-9a-fA-F]{24}$/)
                 .required(),
             content: Joi.string().required()
+        })
+    },
+    faq: {
+        create: Joi.object<IFaq>({
+            user: Joi.string().required(),
+            pregunta: Joi.string().required(),
+            respuestas: Joi.array().items(Joi.string().optional()),
+            IsDeleted: Joi.boolean().optional()
+        }),
+        update: Joi.object<IFaq>({
+            user: Joi.string().required(),
+            pregunta: Joi.string().required(),
+            respuestas: Joi.array().items(Joi.string().optional()),
+            IsDeleted: Joi.boolean().optional()
+        })
+    },
+    resposta: {
+        create: Joi.object<IResposta>({
+            user: Joi.string().required(),
+            respuesta: Joi.string().required(),
+            IsDeleted: Joi.boolean().optional()
+        }),
+        update: Joi.object<IResposta>({
+            user: Joi.string().required(),
+            respuesta: Joi.string().required(),
+            IsDeleted: Joi.boolean().optional()
         })
     }
 };
