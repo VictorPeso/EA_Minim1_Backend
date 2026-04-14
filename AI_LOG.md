@@ -7,17 +7,44 @@
 
 ---
 
-## Entrada 1 [HH:MM]
+## Entrada 1 [11:05]
+
+**Pregunta**  
+Adaptar text per a que el readme quedi més elegant.
+
+**Prompt**
+
+```text
+Tengo el siguiente txt en el que se especifican las decisiones tomadas a la hora de llevar a cabo un proyecto de programación. Corrigelo, espacialo y adaptalo para que quede elegante y entregable en un contexto universitario:
+
+Per fer més senzilla qualsevol incorporación dintre del backend he anat seguint l'evolució natural d'una sol·licitud en arribar al meu sistema pero en sentit contrari. És a dir, després de crear el nou model amb el seu pertinent esquema, he seguit els seguents pasos sequencialment: 1. Service: Creació d'un nou service per a que el nou model pugui accedir a la base de dades. 2. Controller: Creació del controlador pertinent que gestioni les peticions HTTP i faci la crida al service. 3. Middleware: En aquest cas simplemente el JOI, on s'han especificat els criteris de verifiació seguint l'esquema dels apartats anteriors. 4. Routes: Creació del nou endpoint ja propiament dit amb la seva ruta per fer les peticions CRUD per HTTP.
+```
+
+**Incoherències**
+
+- Cap, m'ha semblat que la veersió proporcionada era correcte.
+
+**Solució**
+
+- No ha fet falta.
+
+---
+
+## Entrada X [HH:MM]
 
 **Pregunta**  
 [Quin codi o dubte has plantejat a la IA?]
 
-**Prompt**  
+**Prompt**
+
 ```text
 [Enganxa aquí el text literal que has enviat a l'assistent]
 ```
-**Incoherències**  
+
+**Incoherències**
+
 - [Exemple: ha proposat una ruta que no existeix al projecte]
 
-**Solució**  
+**Solució**
+
 - [Exemple: he canviat la ruta `src/components/` per `app/components/`]
